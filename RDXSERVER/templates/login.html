@@ -81,6 +81,12 @@
         .forgot-link a:hover {
             text-decoration: underline;
         }
+        .checkbox-label {
+            font-size: 14px;
+            display: block;
+            text-align: left;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -113,6 +119,12 @@
             <form method="POST" action="{{ url_for('login') }}">
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
+
+                <!-- ✅ Admin Checkbox -->
+                <label class="checkbox-label">
+                    <input type="checkbox" name="is_admin"> Admin Login
+                </label>
+
                 <input type="submit" value="Login">
             </form>
 

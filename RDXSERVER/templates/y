@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h2>Welcome, Admin</h2>
+
+    <form method="POST" action="/admin/search">
+        <input type="text" name="search" placeholder="Search users..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <br>
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Department</th>
+            <th>Mobile</th>
+            <th>Email</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+            <td>{{ user[3] }}</td>
+            <td>{{ user[4] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br><a href="/logout">Logout</a>
+</body>
+</html>

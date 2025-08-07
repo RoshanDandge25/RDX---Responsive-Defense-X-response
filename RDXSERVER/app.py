@@ -132,25 +132,46 @@ def register():
     return render_template('register.html')
 
 # -------------------- Login --------------------
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        is_admin = 'is_admin' in request.form  # Checkbox
 
-        cursor.execute("SELECT * FROM rdxusers WHERE email = %s", (email,))
-        user = cursor.fetchone()
+        if is_admin:
+            # Admin Login Logic
+            if email == 'roshandandge25@gmail.com':
+                cursor.execute("SELECT * FROM rdxusers WHERE email = %s", (email,))
+                admin = cursor.fetchone()
+                if admin and check_password_hash(admin[6], password):
+                    session['admin'] = True
+                    flash('Admin login successful!', 'success')
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    flash('Invalid admin credentials.', 'danger')
+                    return render_template('login.html')
+            else:
+                flash('Unauthorized: Not an admin email.', 'danger')
+                return render_template('login.html')
 
-        if user and check_password_hash(user[6], password):
-            session['username'] = user[1]
-            session['email'] = user[5]
-            flash('Login successful!', 'success')
-            return redirect(url_for('about'))
         else:
-            flash('Invalid email or password.', 'danger')
-            return render_template('login.html')
+            # Normal User Login
+            cursor.execute("SELECT * FROM rdxusers WHERE email = %s", (email,))
+            user = cursor.fetchone()
+
+            if user and check_password_hash(user[6], password):
+                session['username'] = user[1]
+                session['email'] = user[5]
+                flash('Login successful!', 'success')
+                return redirect(url_for('about'))
+            else:
+                flash('Invalid email or password.', 'danger')
+                return render_template('login.html')
 
     return render_template('login.html')
+
 
 # -------------------- Forgot Password --------------------
 @app.route('/forgot_password', methods=['GET', 'POST'])
@@ -208,6 +229,60 @@ def logout():
     session.clear()
     flash('Logged out successfully.', 'info')
     return redirect(url_for('login'))
+
+# -------------------- Admin Login --------------------
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        cursor.execute("SELECT * FROM rdxusers WHERE email = %s", (email,))
+        admin_data = cursor.fetchone()
+
+        if admin_data:
+            hashed_password = admin_data[6]
+            role = admin_data[7]  # 8th column is 'role'
+
+            if check_password_hash(hashed_password, password) and role == 'admin':
+                session['admin'] = True
+                flash('Admin login successful!', 'success')
+                return redirect(url_for('admin_dashboard'))
+
+        flash('Invalid admin credentials.', 'danger')
+        return render_template('admin_login.html')
+
+    return render_template('admin_login.html')
+# -------------------- Admin Dashboard --------------------
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    if not session.get('admin'):
+        flash('Unauthorized access.', 'danger')
+        return redirect(url_for('admin'))
+
+    cursor.execute("SELECT firstname, lastname, department, mobile, email FROM rdxusers")
+    users = cursor.fetchall()
+    return render_template('admin_dashboard.html', users=users)
+
+# -------------------- Admin Search --------------------
+
+@app.route('/admin/search', methods=['POST'])
+def admin_search():
+    if 'admin' not in session:
+        flash('Unauthorized access. Please login as admin.', 'danger')
+        return redirect(url_for('admin_login'))
+
+    search_term = request.form['search']
+    like_pattern = f"%{search_term}%"
+
+    cursor.execute("""
+        SELECT firstname, lastname, department, mobile, email
+        FROM rdxusers
+        WHERE firstname LIKE %s OR lastname LIKE %s OR department LIKE %s OR mobile LIKE %s OR email LIKE %s
+    """, (like_pattern, like_pattern, like_pattern, like_pattern, like_pattern))
+
+    users = cursor.fetchall()
+    return render_template('admin_dashboard.html', users=users)
 
 # -------------------- Run --------------------
 if __name__ == '__main__':

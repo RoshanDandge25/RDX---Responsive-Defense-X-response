@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: #1e2b38;
+            border-radius: 20px;
+            box-shadow: 0 0 25px #00f7ff88;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #00f7ff;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #00f7ff;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00d4e6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #00f7ff;
+            color: #000;
+            text-align: left;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #444;
+        }
+
+        tr:hover {
+            background-color: #2a3b4c;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #00f7ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .logout-icon {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome, Admin</h2>
+
+        <form method="POST" action="/admin/search">
+            <input type="text" name="search" placeholder="Search users..." required>
+            <button type="submit">Search</button>
+        </form>
+
+        <table>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Department</th>
+                <th>Mobile</th>
+                <th>Email</th>
+            </tr>
+            {% for user in users %}
+            <tr>
+                <td>{{ user[0] }}</td>
+                <td>{{ user[1] }}</td>
+                <td>{{ user[2] }}</td>
+                <td>{{ user[3] }}</td>
+                <td>{{ user[4] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <a href="/logout"><span class="logout-icon">🔒</span> Logout</a>
+    </div>
+</body>
+</html>
