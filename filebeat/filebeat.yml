@@ -1,0 +1,8 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/snort/alert
+
+output.logstash:
+  hosts: ["192.168.100.31:5044"]

@@ -1,0 +1,3 @@
+Cowrie config file: /opt/cowrie/etc/cowrie.cfg
+Log files: /opt/cowrie/var/log/cowrie/cowrie.log
+Default user/password: root/123456
