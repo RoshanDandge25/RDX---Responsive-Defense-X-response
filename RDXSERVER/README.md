@@ -34,18 +34,7 @@
 
 ## 📁 Project Structure
 
-RDXSERVER/
-├── app.py
-├── templates/
-│ ├── index.html
-│ ├── login.html
-│ ├── register.html
-│ ├── forgot_password.html
-│ ├── about.html
-│ ├── admin_dashboard.html
-│ └── admin_login.html
-├── venv/
-
+![Project Structure](https://github.com/user-attachments/assets/953e4276-39b9-432c-a15d-33c5ca964d91)
 
 ---
 
@@ -60,6 +49,12 @@ RDXSERVER/
 ---
 
 ### 🔧 Setup Instructions
+
+### How to Run 
+
+- cd ~/RDXSERVER
+- source venv/bin/activate
+- python3 app.py --host=0.0.0.0 --port=5000
 
 1. **Clone the Repository**
 
